@@ -1,6 +1,6 @@
 # 🌐 BÀI TẬP 3 - PHÁT TRIỂN ỨNG DỤNG TRÊN NỀN WEB  
 **Giảng viên:** Đỗ Duy Cốp  
-**Lớp học phần:** 58KTPM  
+**Lớp học phần:** 58KTP  
 **Sinh viên thực hiện:** Nguyễn Như Khiêm  
 **Chủ đề:** Lập trình ứng dụng web thương mại điện tử trên nền Linux (Docker + Hyper-V + Ubuntu)
 
@@ -251,7 +251,7 @@ Qua bài này, tôi đã:
 ---
 
 ## 🧾 THÔNG TIN REPO
-**Tên repo GitHub**: `web-thuong-mai-dien-tu-docker-linux`
+**Tên repo GitHub**: `BT3_Web_Linux`
 
 ### Cấu trúc repo:
 ```
