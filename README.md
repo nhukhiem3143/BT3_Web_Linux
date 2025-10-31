@@ -71,22 +71,51 @@ web-thuong-mai-dien-tu/
 + Chọn ngôn ngữ tiếng Anh, kết nối WiFi nếu cần.
 + Tạo user/password
 <img width="1283" height="595" alt="Screenshot 2025-11-01 002614" src="https://github.com/user-attachments/assets/6174e99b-88b0-45d0-b747-988850b080aa" />
+5. Sau khi cài xong ,đăng nhập Unbuntu
+<img width="1252" height="927" alt="image" src="https://github.com/user-attachments/assets/62cb6ee4-1002-470e-a54c-5ce823c1b10b" />  
 
-5. Sau cài, cập nhật hệ thống: Mở Terminal (Ctrl+Alt+T), chạy:
+
+
+6. Sau cài, cập nhật hệ thống: Mở Terminal (Ctrl+Alt+T), chạy:
+
 ```
-textsudo apt update && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
+```
+
+<img width="734" height="283" alt="image" src="https://github.com/user-attachments/assets/8e1c3735-e261-4447-b1cf-d91eecb2004c" />
+
++ Thời gian: 5-10 phút. Nếu hỏi "Y/n", gõ "Y" và Enter.
++ Sau đó cài thêm tool cơ bản:
+
+```
 sudo apt install curl wget -y
 ```
 
 6. Test: Chạy lsb_release -a để xác nhận Ubuntu chạy.
+<img width="325" height="121" alt="image" src="https://github.com/user-attachments/assets/3bed5bfe-7ef7-44e6-90d4-e1827f2856f3" />
+
 
 ---
 
 ### Bước 3️⃣: Cài đặt Docker và Docker Compose
+1. Cài Docker engine (script chính thức, nhanh nhất):
 Trong Ubuntu (VM):
-```bash
-sudo apt update
-sudo apt install -y ca-certificates curl gnupg lsb-release
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+``` 
+<img width="1033" height="224" alt="image" src="https://github.com/user-attachments/assets/b5efea88-0f95-4a16-b46e-94b55d378c09" />    
+
+2. Thêm user vào group docker (để chạy docker không cần sudo):
+```
+textsudo usermod -aG docker $USER
+```
+Áp dụng thay đổi: Gõ exit để logout, rồi login lại (gõ username/password như trước). Hoặc reboot nhanh: sudo reboot.  
+<img width="432" height="64" alt="image" src="https://github.com/user-attachments/assets/2a52d918-7160-45cc-91af-eec993bd318f" />
+3. Test không sudo:
+`textdocker run hello-world`
+Nếu thấy "Hello from Docker!", là thành công (không cần sudo nữa).  
+<img width="692" height="394" alt="image" src="https://github.com/user-attachments/assets/0a6e89ab-0378-44b1-95b5-caee55a7671d" />
 
 # Thêm repo Docker chính thức
 sudo mkdir -p /etc/apt/keyrings
