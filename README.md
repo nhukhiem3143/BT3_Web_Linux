@@ -56,25 +56,24 @@ web-thuong-mai-dien-tu/
 ### Bước 2️⃣: Cài đặt Ubuntu trong Hyper-V
 1. Mở Hyper-V Manager (tìm trong Start Menu).
 2. Nhấp phải vào tên máy bạn > New > Virtual Machine.
-+ Name: Đặt tên như "Ubuntu-WebDev".
++ Name: Đặt tên như "Ubuntu-Web".
 + Generation: Chọn Generation 1 (tương thích tốt với ISO).
 + Memory: 4GB (hoặc hơn nếu máy mạnh).
 + Network: Chọn Default Switch (để VM có IP riêng).
 + Virtual Hard Disk: Tạo mới, 12GB.
-+ Installation Options: Chọn "Install an operating system from a bootable CD/DVD-ROM" > Image file (.iso) > Chọn file ISO Ubuntu bạn tải.
-<img width="877" height="661" alt="Screenshot 2025-11-01 001855" src="https://github.com/user-attachments/assets/d5136745-1773-439f-9998-4a77520ec637" />
-
++ Installation Options: Chọn "Install an operating system from a bootable CD/DVD-ROM" > Image file (.iso) > Chọn file ISO Ubuntu đã tải.
+<img width="883" height="666" alt="image" src="https://github.com/user-attachments/assets/0a06c257-f43d-451f-8ec2-4b85a6ca0757" />  
+ 
 3. Hoàn tất wizard, nhấp phải VM > Connect > Start.
-<img width="802" height="592" alt="Screenshot 2025-11-01 001942" src="https://github.com/user-attachments/assets/a3521bb5-c814-4b6b-a6f3-8702cc56f36a" />
+<img width="813" height="609" alt="image" src="https://github.com/user-attachments/assets/bdad9dcc-2619-4448-b571-0b58dd652809" /> 
 
 4. Trong cửa sổ VM, cài Ubuntu:
 + Chọn ngôn ngữ tiếng Anh, kết nối WiFi nếu cần.
 + Tạo user/password
 <img width="1283" height="595" alt="Screenshot 2025-11-01 002614" src="https://github.com/user-attachments/assets/6174e99b-88b0-45d0-b747-988850b080aa" />
+
 5. Sau khi cài xong ,đăng nhập Unbuntu
-<img width="1252" height="927" alt="image" src="https://github.com/user-attachments/assets/62cb6ee4-1002-470e-a54c-5ce823c1b10b" />  
-
-
+<img width="1032" height="626" alt="image" src="https://github.com/user-attachments/assets/73946c0d-237b-458d-bb3d-bb82368a5447" />
 
 6. Sau cài, cập nhật hệ thống: Mở Terminal (Ctrl+Alt+T), chạy:
 
@@ -108,7 +107,7 @@ sudo sh get-docker.sh
 
 2. Thêm user vào group docker (để chạy docker không cần sudo):  
 ```
-textsudo usermod -aG docker $USER
+sudo usermod -aG docker $USER
 ```
 
 Áp dụng thay đổi: Gõ exit để logout, rồi login lại (gõ username/password như trước). Hoặc reboot nhanh: sudo reboot.   
@@ -116,30 +115,57 @@ textsudo usermod -aG docker $USER
 
 4. Test không sudo:
 ```
-textdocker run hello-world
+docker run hello-world
 ```
 Nếu thấy "Hello from Docker!", là thành công (không cần sudo nữa).  
 <img width="692" height="394" alt="image" src="https://github.com/user-attachments/assets/0a6e89ab-0378-44b1-95b5-caee55a7671d" />
 
 # Thêm repo Docker chính thức
+```
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  
+```
+<img width="1031" height="216" alt="image" src="https://github.com/user-attachments/assets/1c10cdac-8bf9-4277-9734-71b3e4f57c52" />  
+
+- Thay đổi quyền thực thi cho file, biến nó thành lệnh có thể chạy từ bất kỳ đâu (executable).
+```
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+# Kiểm tra Docker
+```
+docker compose version
+```
+
+---
+## Cài Docker trên Ubuntu (>= 20.04)
+# 1. Cập nhật hệ thống
+sudo apt update && sudo apt upgrade -y
+
+# 2. Cài gói cần thiết
+sudo apt install ca-certificates curl gnupg lsb-release -y
+
+# 3. Thêm key GPG của Docker
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
+# 4. Thêm repo Docker
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
   https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
+# 5. Cài Docker Engine
 sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-# Kiểm tra Docker
-sudo docker version
-sudo docker compose version
-```
+# 6. Kiểm tra
+sudo docker --version
+sudo docker run hello-world
 
----
+# 7. (Tuỳ chọn) Cho phép user hiện tại dùng docker không cần sudo
+sudo usermod -aG docker $USER
+newgrp docker
 
 ## 🐋 4. CẤU HÌNH DOCKER-COMPOSE
 Tạo file `docker-compose.yml`:
