@@ -106,14 +106,18 @@ sudo sh get-docker.sh
 ``` 
 <img width="1033" height="224" alt="image" src="https://github.com/user-attachments/assets/b5efea88-0f95-4a16-b46e-94b55d378c09" />    
 
-2. Thêm user vào group docker (để chạy docker không cần sudo):
+2. Thêm user vào group docker (để chạy docker không cần sudo):  
 ```
 textsudo usermod -aG docker $USER
 ```
-Áp dụng thay đổi: Gõ exit để logout, rồi login lại (gõ username/password như trước). Hoặc reboot nhanh: sudo reboot.  
-<img width="432" height="64" alt="image" src="https://github.com/user-attachments/assets/2a52d918-7160-45cc-91af-eec993bd318f" />
-3. Test không sudo:
-`textdocker run hello-world`
+
+Áp dụng thay đổi: Gõ exit để logout, rồi login lại (gõ username/password như trước). Hoặc reboot nhanh: sudo reboot.   
+<img width="432" height="64" alt="image" src="https://github.com/user-attachments/assets/2a52d918-7160-45cc-91af-eec993bd318f" />  
+
+4. Test không sudo:
+```
+textdocker run hello-world
+```
 Nếu thấy "Hello from Docker!", là thành công (không cần sudo nữa).  
 <img width="692" height="394" alt="image" src="https://github.com/user-attachments/assets/0a6e89ab-0378-44b1-95b5-caee55a7671d" />
 
