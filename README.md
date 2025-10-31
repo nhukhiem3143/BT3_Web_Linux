@@ -49,19 +49,36 @@ web-thuong-mai-dien-tu/
    - `Virtual Machine Platform`
    - `Windows Subsystem for Linux`
 3. Nhấn OK → khởi động lại máy.
+<img width="622" height="515" alt="image" src="https://github.com/user-attachments/assets/de625e7a-21bd-4c18-837e-f4c25437c45a" />
 
 ---
 
 ### Bước 2️⃣: Cài đặt Ubuntu trong Hyper-V
-1. Mở **Hyper-V Manager**
-2. Chọn **New → Virtual Machine**
-3. Cấu hình:
-   - Name: `UbuntuServer`
-   - Generation: `2`
-   - RAM: `4096 MB`
-   - Network: Default Switch
-4. Gắn file ISO Ubuntu (đã tải từ ubuntu.com)
-5. Khởi động VM → tiến hành cài đặt Ubuntu.
+1. Mở Hyper-V Manager (tìm trong Start Menu).
+2. Nhấp phải vào tên máy bạn > New > Virtual Machine.
++ Name: Đặt tên như "Ubuntu-WebDev".
++ Generation: Chọn Generation 1 (tương thích tốt với ISO).
++ Memory: 4GB (hoặc hơn nếu máy mạnh).
++ Network: Chọn Default Switch (để VM có IP riêng).
++ Virtual Hard Disk: Tạo mới, 12GB.
++ Installation Options: Chọn "Install an operating system from a bootable CD/DVD-ROM" > Image file (.iso) > Chọn file ISO Ubuntu bạn tải.
+<img width="877" height="661" alt="Screenshot 2025-11-01 001855" src="https://github.com/user-attachments/assets/d5136745-1773-439f-9998-4a77520ec637" />
+
+3. Hoàn tất wizard, nhấp phải VM > Connect > Start.
+<img width="802" height="592" alt="Screenshot 2025-11-01 001942" src="https://github.com/user-attachments/assets/a3521bb5-c814-4b6b-a6f3-8702cc56f36a" />
+
+4. Trong cửa sổ VM, cài Ubuntu:
++ Chọn ngôn ngữ tiếng Anh, kết nối WiFi nếu cần.
++ Tạo user/password
+<img width="1283" height="595" alt="Screenshot 2025-11-01 002614" src="https://github.com/user-attachments/assets/6174e99b-88b0-45d0-b747-988850b080aa" />
+
+5. Sau cài, cập nhật hệ thống: Mở Terminal (Ctrl+Alt+T), chạy:
+```
+textsudo apt update && sudo apt upgrade -y
+sudo apt install curl wget -y
+```
+
+6. Test: Chạy lsb_release -a để xác nhận Ubuntu chạy.
 
 ---
 
