@@ -154,77 +154,95 @@ echo \
   https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+<img width="970" height="255" alt="Screenshot 2025-11-01 212612" src="https://github.com/user-attachments/assets/9e3cb5af-7c37-4e3a-8477-ff3f691db820" />
 
 # 5. Cài Docker Engine
 sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+<img width="973" height="218" alt="image" src="https://github.com/user-attachments/assets/2ae3db7f-f845-4ac4-8fab-edf4f8048867" />
 
 # 6. Kiểm tra
 sudo docker --version
 sudo docker run hello-world
+<img width="757" height="438" alt="image" src="https://github.com/user-attachments/assets/68905e0b-3750-4052-b6c8-cd4902268dbd" />  
 
 # 7. (Tuỳ chọn) Cho phép user hiện tại dùng docker không cần sudo
 sudo usermod -aG docker $USER
 newgrp docker
+<img width="586" height="72" alt="image" src="https://github.com/user-attachments/assets/0974ee34-08d2-49c2-9037-f9a3b8e4b3dd" />  
 
 ## 🐋 4. CẤU HÌNH DOCKER-COMPOSE
 Tạo file `docker-compose.yml`:
 
 ```yaml
-version: "3.9"
+version: '3.9'
+
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:latest
     container_name: mariadb
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: shopdb
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: 1234
-    ports:
-      - "3306:3306"
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: khiem
+      MYSQL_PASSWORD: 123456
     volumes:
       - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: mariadb
-      MYSQL_ROOT_PASSWORD: root
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
     depends_on:
       - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: khiem
+      PMA_PASSWORD: 123456
+    ports:
+      - "8080:80"
 
   nodered:
-    image: nodered/node-red
+    image: nodered/node-red:latest
+    container_name: nodered
+    restart: always
     ports:
       - "1880:1880"
     volumes:
-      - ./nodered:/data
+      - nodered_data:/data
 
   influxdb:
-    image: influxdb
+    image: influxdb:latest
+    container_name: influxdb
+    restart: always
     ports:
       - "8086:8086"
     volumes:
-      - influx_data:/var/lib/influxdb
+      - influxdb_data:/var/lib/influxdb
 
   grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
     depends_on:
       - influxdb
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
 
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: nginx
+    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./frontend:/usr/share/nginx/html
     depends_on:
       - nodered
@@ -232,8 +250,13 @@ services:
 
 volumes:
   mariadb_data:
-  influx_data:
+  nodered_data:
+  influxdb_data:
+  grafana_data:
 ```
+Chạy toàn bộ container
+```docker compose up -d```
+<img width="801" height="323" alt="image" src="https://github.com/user-attachments/assets/417edba2-6cd4-4b9e-96c1-e5dcc2433980" />
 
 ---
 
