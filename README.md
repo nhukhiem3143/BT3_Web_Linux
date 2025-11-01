@@ -21,21 +21,38 @@ Sử dụng **Docker Compose** để quản lý các container:
 ## ⚙️ 2. CẤU TRÚC DỰ ÁN
 
 ```
-web-thuong-mai-dien-tu/
+/home/khiem/web-ecommerce/  
 │
-├── docker-compose.yml
-├── frontend/
-│   ├── index.html
-│   ├── script.js
-│   ├── style.css
-│
-├── nodered/
-│   └── flows.json
+├── docker-compose.yml             # File chính khai báo toàn bộ container
 │
 ├── nginx/
-│   └── default.conf
+│   ├── default.conf               # File cấu hình nginx (reverse proxy, domain)
+│   └── certs/                     # Nếu sau này thêm SSL
 │
-└── README.md
+├── node-red/
+│   ├── data/                      # Lưu flow.json, settings.js, node_modules...
+│
+├── mariadb/
+│   ├── data/                      # Lưu database của MariaDB
+│
+├── influxdb/
+│   ├── data/                      # Dữ liệu time-series cho Grafana
+│
+├── grafana/
+│   ├── data/                      # Lưu config, dashboards, users...
+│
+├── phpmyadmin/                    # (tuỳ chọn, không cần data riêng)
+│
+└── web/
+    ├── index.html                 # Single Page Application chính
+    ├── js/
+    │   ├── app.js                 # Logic xử lý giao diện + gọi API nodered
+    │   ├── login.js               # Xử lý đăng nhập
+    │   └── cart.js                # Giỏ hàng, đặt hàng
+    ├── css/
+    │   └── style.css
+    └── assets/
+        └── images/  
 ```
 
 ---
@@ -285,7 +302,16 @@ server {
 }
 ```
 
+
+<img width="1875" height="968" alt="image" src="https://github.com/user-attachments/assets/7efd6ca8-1439-4f57-866d-b372a290098c" />  
+
+<img width="1812" height="947" alt="image" src="https://github.com/user-attachments/assets/2925e2cb-3f04-4ad1-add2-62015b37e713" />  
+
 ---
+
+Website chính: 👉 http://nguyennhukhiem.com  
+Node-RED: 👉 http://nguyennhukhiem.com/nodered  
+Grafana: 👉 http://nguyennhukhiem.com/grafana  
 
 ## 💻 6. FRONTEND (index.html + script.js)
 - **index.html**: cấu trúc giao diện chính (SPA)
