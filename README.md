@@ -26,8 +26,8 @@ Sử dụng **Docker Compose** để quản lý các container:
 ├── docker-compose.yml             # File chính khai báo toàn bộ container
 │
 ├── nginx/
-│   ├── default.conf               # File cấu hình nginx (reverse proxy, domain)
-│   └── certs/                     # Nếu sau này thêm SSL
+│   └── default.conf               # File cấu hình nginx (reverse proxy, domain)
+│  
 │
 ├── node-red/
 │   ├── data/                      # Lưu flow.json, settings.js, node_modules...
@@ -39,7 +39,7 @@ Sử dụng **Docker Compose** để quản lý các container:
 │   ├── data/                      # Dữ liệu time-series cho Grafana
 │
 ├── grafana/
-│   ├── data/                      # Lưu config, dashboards, users...
+│   └── data/                      # Lưu config, dashboards, users...
 │
 ├── phpmyadmin/                    # (tuỳ chọn, không cần data riêng)
 │
@@ -427,14 +427,35 @@ web/
 ---
 
 ## ⚙️ 7. NODE-RED BACKEND
-Các flow chính:
-- `/api/login` – xác thực người dùng
-- `/api/products` – lấy danh sách sản phẩm
-- `/api/cart` – xử lý giỏ hàng
-- `/api/order` – thêm đơn hàng
-- `/api/admin/stats` – trả dữ liệu cho Grafana
+### Các flow chính:
+### 1. Đăng Nhập : API `/login` – Xác thực người dùng   
+curl -X POST http://nguyennhukhiem.com/api/login \
+<img width="1484" height="268" alt="image" src="https://github.com/user-attachments/assets/9c201540-d722-48f3-b24a-ac80d8bbc2d5" />
 
-Tất cả đều trả về JSON.
+### 1. Sản phẩm bán chạy 
+curl http://nguyennhukhiem.com/api/san-pham-ban-chay
+<img width="1020" height="148" alt="image" src="https://github.com/user-attachments/assets/11ddce68-5392-4aa6-9055-d4925b269386" />
+
+### 2. Nhóm sản phẩm
+curl http://nguyennhukhiem.com/api/nhom-san-pham
+<img width="925" height="157" alt="image" src="https://github.com/user-attachments/assets/29828ee3-e84e-41fe-a731-3394c6f8eb1d" />
+
+### 3. Sản phẩm theo nhóm (nhóm ID = 1)
+curl http://nguyennhukhiem.com/api/san-pham?nhom=1
+<img width="965" height="177" alt="image" src="https://github.com/user-attachments/assets/4934be24-29f3-4e81-938e-ce2241408c72" />
+
+### 4. Tìm kiếm
+curl http://nguyennhukhiem.com/api/tim-kiem?q=iphone
+<img width="916" height="148" alt="image" src="https://github.com/user-attachments/assets/fc03dd67-a52b-4ca3-8f70-86f35ff65fb9" />
+
+### 6. Đặt hàng (cần token)
+curl -X POST http://nguyennhukhiem.com/api/dat-hang \
+<img width="1693" height="324" alt="image" src="https://github.com/user-attachments/assets/c50a3e6d-89b5-4559-91dc-42e6cf0c6c34" />
+
+### 7. Xem đơn hàng
+curl -X GET http://nguyennhukhiem.com/api/don-hang/2
+<img width="1462" height="287" alt="image" src="https://github.com/user-attachments/assets/6b672492-a72a-44d5-9443-c42a87ab80c3" />
+
 
 ---
 
