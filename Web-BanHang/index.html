@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Điện Tử Khiêm</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Điện Tử Khiêm</h1>
+      
+      <nav id="main-nav" style="display:none">
+        <button onclick="showHome()" class="nav-btn">Trang chủ</button>
+        <button onclick="showCategories()" class="nav-btn">Danh mục</button>
+        <button onclick="showCart()" class="nav-btn">Giỏ hàng (<span id="cart-count">0</span>)</button>
+        <button onclick="showMyOrders()" id="orders-btn" style="display:none" class="nav-btn">Đơn hàng của tôi</button>
+        <!-- Ẩn Profile, dùng dropdown thay -->
+        <button onclick="showAdminOrders()" id="admin-btn" style="display:none" class="nav-btn">Quản lý đơn</button>
+        <button onclick="showStats()" id="stats-btn" style="display:none" class="nav-btn">Thống kê</button>
+        <button onclick="logout()" class="nav-btn">Đăng xuất</button>
+      </nav>
+      
+      <!-- Tên user clickable (giữ nguyên, dropdown có "Sửa thông tin") -->
+      <div id="user-name" style="display:none; position:absolute; top:1rem; right:1rem; cursor:pointer; color:white; font-weight:bold;" onclick="toggleUserMenu()">
+        <span id="user-display">User</span>
+        <div id="user-menu" style="display:none; position:absolute; right:0; top:100%; background:white; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); min-width:150px; z-index:1000;">
+        </div>
+      </div>
+    </header>
+
+    <div id="search-bar" style="display:none; padding:1rem; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+      <div style="max-width:600px; margin:0 auto; display:flex; gap:0.5rem;">
+        <input id="search-input" type="text" placeholder="Tìm sản phẩm..." style="flex:1; padding:0.8rem; border:2px solid #e0e0e0; border-radius:6px;" />
+        <button onclick="doSearch()" style="padding:0.8rem 1.5rem; background:#667eea; color:white; border:none; border-radius:6px; cursor:pointer;">Tìm Kiếm</button>
+      </div>
+    </div>
+
+    <main id="content">
+      <div class="loading">Đang tải...</div>
+    </main>
+  </div>
+
+  <!-- Load theo thứ tự: login -> cart -> app -->
+  <script src="js/login.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
