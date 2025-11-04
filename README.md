@@ -397,15 +397,23 @@ server {
 
 ---
 
-Website chính: 👉 http://nguyennhukhiem.com  
-Node-RED: 👉 http://nguyennhukhiem.com/nodered  
-Grafana: 👉 http://nguyennhukhiem.com/grafana  
+**Website chính:** 👉 http://nguyennhukhiem.com  
+**Node-RED:** 👉 http://nguyennhukhiem.com/nodered  
+**Grafana:** 👉 http://nguyennhukhiem.com/grafana  
 
 ## 💻 6. FRONTEND (index.html + script.js)
-- **index.html**: cấu trúc giao diện chính (SPA)
-- **script.js**: gọi API từ Node-RED qua `fetch()`, nhận JSON và render UI
-- **style.css**: định dạng bố cục
-
+```
+web/
+    ├── index.html                 #  Cấu trúc giao diện chính (SPA)
+    ├── js/
+    │   ├── app.js                 # Logic xử lý giao diện + gọi API nodered
+    │   ├── login.js               # Xử lý đăng nhập
+    │   └── cart.js                # Giỏ hàng, đặt hàng
+    ├── css/
+    │   └── style.css
+    └── assets/
+        └── images/                # Lưu ảnh sản phẩm
+```
 ### Các chức năng:
 - Login (mã hóa mật khẩu bằng SHA-256)
 - Hiển thị danh sách sản phẩm bán chạy
@@ -446,8 +454,7 @@ sudo docker compose up -d
 ---
 
 ## 📸 9. HÌNH ẢNH MINH HỌA
-*(Thêm ảnh chụp thật khi chạy hệ thống)*  
-Ví dụ:
+
 - `docker ps` hiển thị container đang chạy
 - Giao diện web sản phẩm
 - Biểu đồ Grafana thống kê đơn hàng
@@ -455,28 +462,11 @@ Ví dụ:
 ---
 
 ## 📚 10. KẾT LUẬN
-Qua bài này, tôi đã:
+Qua bài này, em đã:
 - Tự cài đặt và cấu hình Docker trên Ubuntu (chạy trong Hyper-V)
 - Sử dụng `docker-compose` quản lý nhiều dịch vụ
 - Xây dựng web SPA đầy đủ frontend – backend – database – giám sát
 - Hiểu rõ cách kết nối Nginx reverse proxy và Node-RED API
 
 ---
-
-## 🧾 THÔNG TIN REPO
-**Tên repo GitHub**: `BT3_Web_Linux`
-
-### Cấu trúc repo:
-```
-📦 web-thuong-mai-dien-tu-docker-linux
- ┣ 📂 frontend
- ┣ 📂 nodered
- ┣ 📂 nginx
- ┣ 📜 docker-compose.yml
- ┗ 📜 README.md
-```
-
----
-
-**📅 Ngày hoàn thành:** 05/11/2025  
-**✍️ Sinh viên thực hiện:** Nguyễn Như Khiêm
+# The End
