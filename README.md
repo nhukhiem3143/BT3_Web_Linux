@@ -6,7 +6,7 @@
 
 ---
 
-## 🧩 1. GIỚI THIỆU CHUNG
+# 🧩 1. GIỚI THIỆU CHUNG
 Bài tập yêu cầu xây dựng **một ứng dụng web thương mại điện tử** dạng **Single Page Application (SPA)**, triển khai trên **Linux (Ubuntu)** chạy trong **Hyper-V**.  
 Sử dụng **Docker Compose** để quản lý các container:
 - `mariadb` – cơ sở dữ liệu lưu user, sản phẩm, đơn hàng
@@ -18,7 +18,7 @@ Sử dụng **Docker Compose** để quản lý các container:
 
 ---
 
-## ⚙️ 2. CẤU TRÚC DỰ ÁN
+# ⚙️ 2. CẤU TRÚC DỰ ÁN
 
 ```
 /home/khiem/web-ecommerce/  
@@ -57,9 +57,9 @@ Sử dụng **Docker Compose** để quản lý các container:
 
 ---
 
-## 🧱 3. CÀI ĐẶT MÔI TRƯỜNG
+# 🧱 3. CÀI ĐẶT MÔI TRƯỜNG
 
-### Bước 1️⃣: Kích hoạt Hyper-V
+## Bước 1️⃣: Kích hoạt Hyper-V
 1. Mở **Control Panel → Programs → Turn Windows features on or off**  
 2. Tích chọn:  
    - `Hyper-V`
@@ -70,15 +70,16 @@ Sử dụng **Docker Compose** để quản lý các container:
 
 ---
 
-### Bước 2️⃣: Cài đặt Ubuntu trong Hyper-V
-1. Mở Hyper-V Manager (tìm trong Start Menu).
-2. Nhấp phải vào tên máy bạn > New > Virtual Machine.
+## Bước 2️⃣: Cài đặt Ubuntu trong Hyper-V
+1. Mở Hyper-V Manager (tìm trong Start Menu).  
+2. Nhấp phải vào tên máy bạn > New > Virtual Machine.  
 + Name: Đặt tên như "Ubuntu-Web".
 + Generation: Chọn Generation 1 (tương thích tốt với ISO).
 + Memory: 4GB (hoặc hơn nếu máy mạnh).
 + Network: Chọn Default Switch (để VM có IP riêng).
 + Virtual Hard Disk: Tạo mới, 12GB.
 + Installation Options: Chọn "Install an operating system from a bootable CD/DVD-ROM" > Image file (.iso) > Chọn file ISO Ubuntu đã tải.
+
 <img width="883" height="666" alt="image" src="https://github.com/user-attachments/assets/0a06c257-f43d-451f-8ec2-4b85a6ca0757" />  
  
 3. Hoàn tất wizard, nhấp phải VM > Connect > Start.
@@ -113,143 +114,153 @@ sudo apt install curl wget -y
 
 ---
 
-### Bước 3️⃣: Cài đặt Docker và Docker Compose
-1. Cài Docker engine (script chính thức, nhanh nhất):
-Trong Ubuntu (VM):
+## Bước 3️⃣: Cài đặt Docker và Docker Compose
+### 1. Cập nhật hệ thống
 ```
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-``` 
-<img width="1033" height="224" alt="image" src="https://github.com/user-attachments/assets/b5efea88-0f95-4a16-b46e-94b55d378c09" />    
-
-2. Thêm user vào group docker (để chạy docker không cần sudo):  
-```
-sudo usermod -aG docker $USER
-```
-
-Áp dụng thay đổi: Gõ exit để logout, rồi login lại (gõ username/password như trước). Hoặc reboot nhanh: sudo reboot.   
-<img width="432" height="64" alt="image" src="https://github.com/user-attachments/assets/2a52d918-7160-45cc-91af-eec993bd318f" />  
-
-4. Test không sudo:
-```
-docker run hello-world
-```
-Nếu thấy "Hello from Docker!", là thành công (không cần sudo nữa).  
-<img width="692" height="394" alt="image" src="https://github.com/user-attachments/assets/0a6e89ab-0378-44b1-95b5-caee55a7671d" />
-
-# Thêm repo Docker chính thức
-```
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  
-```
-<img width="1031" height="216" alt="image" src="https://github.com/user-attachments/assets/1c10cdac-8bf9-4277-9734-71b3e4f57c52" />  
-
-- Thay đổi quyền thực thi cho file, biến nó thành lệnh có thể chạy từ bất kỳ đâu (executable).
-```
-sudo chmod +x /usr/local/bin/docker-compose
-```
-
-# Kiểm tra Docker
-```
-docker compose version
-```
-
----
-## Cài Docker trên Ubuntu (>= 20.04)
-# 1. Cập nhật hệ thống
 sudo apt update && sudo apt upgrade -y
-
-# 2. Cài gói cần thiết
+```
+### 2. Cài gói cần thiết
+```
 sudo apt install ca-certificates curl gnupg lsb-release -y
+```
 
-# 3. Thêm key GPG của Docker
+### 3. Thêm key GPG của Docker
+```
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
 
-# 4. Thêm repo Docker
+### 4. Thêm repo Docker
+```
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
   https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
 <img width="970" height="255" alt="Screenshot 2025-11-01 212612" src="https://github.com/user-attachments/assets/9e3cb5af-7c37-4e3a-8477-ff3f691db820" />
 
-# 5. Cài Docker Engine
+### 5. Cài Docker Engine
+```
 sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```  
 <img width="973" height="218" alt="image" src="https://github.com/user-attachments/assets/2ae3db7f-f845-4ac4-8fab-edf4f8048867" />
 
-# 6. Kiểm tra
+### 6. Kiểm tra
+```
 sudo docker --version
 sudo docker run hello-world
+```
 <img width="757" height="438" alt="image" src="https://github.com/user-attachments/assets/68905e0b-3750-4052-b6c8-cd4902268dbd" />  
 
-# 7. (Tuỳ chọn) Cho phép user hiện tại dùng docker không cần sudo
+### 7. (Tuỳ chọn) Cho phép user hiện tại dùng docker không cần sudo
+```
 sudo usermod -aG docker $USER
 newgrp docker
+```
 <img width="586" height="72" alt="image" src="https://github.com/user-attachments/assets/0974ee34-08d2-49c2-9037-f9a3b8e4b3dd" />  
 
 ## 🐋 4. CẤU HÌNH DOCKER-COMPOSE
-Tạo file `docker-compose.yml`:
+### Tạo file `docker-compose.yml`:
 
 ```yaml
-version: '3.9'
+version: '3.8'
 
 services:
   mariadb:
-    image: mariadb:latest
+    image: mariadb:10.11
     container_name: mariadb
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: ecommerce
+      MYSQL_DATABASE: BanHang
       MYSQL_USER: khiem
-      MYSQL_PASSWORD: 123456
-    volumes:
-      - mariadb_data:/var/lib/mysql
+      MYSQL_PASSWORD: khiem123
     ports:
       - "3306:3306"
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+    networks:
+      - ecommerce-network
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin:latest
     container_name: phpmyadmin
     restart: always
-    depends_on:
-      - mariadb
     environment:
       PMA_HOST: mariadb
-      PMA_USER: khiem
-      PMA_PASSWORD: 123456
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root123
     ports:
       - "8080:80"
+    depends_on:
+      - mariadb
+    networks:
+      - ecommerce-network
 
   nodered:
     image: nodered/node-red:latest
     container_name: nodered
     restart: always
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
     ports:
       - "1880:1880"
     volumes:
-      - nodered_data:/data
+      - ./node-red/data:/data
+    user: "1000:1000"
+    depends_on:
+      - mariadb
+      - influxdb
+    networks:
+      - ecommerce-network
+    command: >
+      sh -c "
+      npm install -g node-red-node-mysql &&
+      node-red
+      --httpNodeRoot=/api
+      --httpAdminRoot=/nodered
+      --functionGlobalContext.mysql=require('mysql').createPool({host:'mariadb',user:'khiem',password:'khiem123',database:'BanHang',port:3306,charset:'utf8mb4',connectionLimit:10})
+      --functionGlobalContext.crypto=require('crypto')
+      "
 
   influxdb:
-    image: influxdb:latest
+    image: influxdb:2.7
     container_name: influxdb
     restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=ecommerce
+      - DOCKER_INFLUXDB_INIT_BUCKET=statistics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
     ports:
       - "8086:8086"
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - ./influxdb/data:/var/lib/influxdb2
+    networks:
+      - ecommerce-network
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     restart: always
-    depends_on:
-      - influxdb
+    environment:
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_SERVER_ROOT_URL=http://nguyennhukhiem.com/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
     ports:
       - "3000:3000"
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./grafana/data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - ecommerce-network
 
   nginx:
     image: nginx:latest
@@ -259,46 +270,123 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./frontend:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./web:/usr/share/nginx/html:ro
     depends_on:
       - nodered
       - grafana
+    networks:
+      - ecommerce-network
 
-volumes:
-  mariadb_data:
-  nodered_data:
-  influxdb_data:
-  grafana_data:
+networks:
+  ecommerce-network:
+    driver: bridge
 ```
-Chạy toàn bộ container
-```docker compose up -d```
+
+### Chạy toàn bộ container
+```
+docker compose up -d
+```
 <img width="801" height="323" alt="image" src="https://github.com/user-attachments/assets/417edba2-6cd4-4b9e-96c1-e5dcc2433980" />
 
 ---
 
 ## 🌍 5. CẤU HÌNH NGINX
-File `nginx/default.conf`:
+### File `nginx/default.conf`:
 
 ```nginx
 server {
-  listen 80;
-  server_name nguyennhukhiem.com;
+    listen 80;
+    server_name nguyennhukhiem.com www.nguyennhukhiem.com;
 
-  root /usr/share/nginx/html;
-  index index.html;
+    # === Gốc: SPA Frontend ===
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+        try_files $uri $uri/ /index.html;
 
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }
 
-  location /nodered/ {
-    proxy_pass http://nodered:1880/;
-  }
+    # === API Backend (Node-RED) ===
+    location /api/ {
+        proxy_pass http://nodered:1880/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 
-  location /grafana/ {
-    proxy_pass http://grafana:3000/;
-  }
+        # === API User Orders (Node-RED) ===
+    location /user/ {
+        proxy_pass http://nodered:1880/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # === Node-RED UI (Subpath) ===
+    location ^~ /nodered/ {
+        proxy_pass http://nodered:1880/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Fix tài nguyên tĩnh (CSS/JS) cho subpath
+        sub_filter_once off;
+        sub_filter 'href="/'  'href="/nodered/';
+        sub_filter 'src="/'   'src="/nodered/';
+        sub_filter 'action="/' 'action="/nodered/';
+        sub_filter_types text/css text/javascript text/xml application/javascript;
+        proxy_set_header Accept-Encoding "";
+    }
+
+    # === Grafana (Subpath) ===
+    location /grafana/ {
+        proxy_pass http://grafana:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+        # Fix redirects từ Grafana
+        proxy_redirect http://grafana:3000/ /grafana/;
+        proxy_redirect / /grafana/;
+        
+        # CHỈ thay thế trong HTML (KHÔNG làm hỏng JS/CSS)
+        sub_filter_once off;
+        sub_filter_types text/html;
+        sub_filter 'href="/' 'href="/grafana/';
+        sub_filter 'src="/' 'src="/grafana/';
+        sub_filter 'href="public/' 'href="/grafana/public/';
+        sub_filter 'src="public/' 'src="/grafana/public/';
+        
+        proxy_set_header Accept-Encoding "";
+    }
+
+    # === Bảo mật Header ===
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # === 404 Fallback cho SPA ===
+    error_page 404 /index.html;
 }
 ```
 
