@@ -583,6 +583,22 @@ curl -X POST http://nguyennhukhiem.com/api//danh-gia-don/:orderId \
 
 <img width="1908" height="1027" alt="image" src="https://github.com/user-attachments/assets/6f496e55-c287-48ad-82c0-f72cc0cb6012" />  
 
+### Cấu hình grafana
+<img width="1408" height="839" alt="image" src="https://github.com/user-attachments/assets/35174957-6da8-4c27-a680-f5658bd3e8a8" />   
+
+- Xem thống kê
+<img width="1915" height="1017" alt="image" src="https://github.com/user-attachments/assets/12400d18-6075-4d39-afe1-1d33ddafa8c4" />
+
+- Xuất thành iframe
+```
+        <iframe
+          src="http://nguyennhukhiem.com/grafana/d-solo/add8kv7/thng-k-sn-phm-bn-c?orgId=1&from=1761930000000&to=1764521999999&timezone=browser&panelId=1&__feature.dashboardSceneSolo=true"
+          width="900"
+          height="400"
+          frameborder="0"
+          style="border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.2);"
+        ></iframe>
+```
 ## 💻 8. FRONTEND (index.html + script.js)
 ```
 web/
@@ -652,21 +668,8 @@ web/
 <img width="1919" height="1032" alt="image" src="https://github.com/user-attachments/assets/447e8ed3-38e2-49dc-9a40-ad62c941aabb" />
 
 ---
-## 🚀 8. KHỞI CHẠY HỆ THỐNG
-Trong thư mục dự án:
 
-```bash
-sudo docker compose up -d
-```
-
-### Truy cập:
-- **Website**: http://nguyennhukhiem.com
-- **phpMyAdmin**: http://localhost:8080
-- **Node-RED**: http://nguyennhukhiem.com/nodered
-- **Grafana**: http://nguyennhukhiem.com/grafana
-
-
-## 📚 10. KẾT LUẬN
+## 📚 9. KẾT LUẬN
 Qua bài này, em đã:
 - Tự cài đặt và cấu hình Docker trên Ubuntu (chạy trong Hyper-V)
 - Sử dụng `docker-compose` quản lý nhiều dịch vụ
