@@ -1,6 +1,32 @@
 // Helper $ and show/hide
 function $(id) { return document.getElementById(id); }
-function show(el) { if (el) el.style.display = 'block'; }
+/**
+ * Show an element.
+ * - NAV elements should become flex so they keep their horizontal layout.
+ * - Other elements default to 'block'.
+ */
+function show(el) {
+  if (!el) return;
+  try {
+    const tag = (el.tagName || '').toUpperCase();
+    if (tag === 'NAV') {
+      el.style.display = 'flex';
+      return;
+    }
+    // if this element already has an explicit display value in CSS that isn't "none",
+    // clearing inline style lets CSS decide. Otherwise default to 'block'.
+    const computed = window.getComputedStyle(el).display;
+    if (computed && computed !== 'none') {
+      el.style.display = '';
+    } else {
+      el.style.display = 'block';
+    }
+  } catch (e) {
+    // fallback
+    el.style.display = 'block';
+  }
+}
+
 function hide(el) { if (el) el.style.display = 'none'; }
 
 // API helper (từ login.js)
@@ -71,7 +97,7 @@ async function showHome() {
               <p>${p.mo_ta ? p.mo_ta.substring(0, 50) + '...' : ''}</p>
               <div class="rating">★ ${p.so_sao_trung_binh || 0}/5 (${p.so_luot_mua || 0} lượt mua)</div>
             </div>
-            <button onclick="event.stopPropagation(); addToCart(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')">
+            <button onclick="event.stopPropagation(); addToCart(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')" class="them-vao-gio-btn">
               Thêm vào giỏ
             </button>
             <button onclick="event.stopPropagation(); buyNow(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')" class="btn-buy-now">
@@ -151,9 +177,23 @@ async function showProducts(nhomId) {
               <p>${p.mo_ta ? p.mo_ta.substring(0, 50) + '...' : ''}</p>
               <div class="rating">★ ${p.so_sao_trung_binh || 0}/5 (${p.so_luot_mua || 0} lượt mua)</div>
             </div>
-            <button onclick="event.stopPropagation(); addToCart(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')">
-              Thêm vào giỏ
-            </button>
+                <button onclick="event.stopPropagation(); addToCart(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')" 
+                  style="background: linear-gradient(135deg, #4caf50 0%, #43a047 100%); 
+                        color: white; 
+                        border: none; 
+                        padding: 0.9rem 2rem; 
+                        border-radius: 30px; 
+                        cursor: pointer; 
+                        margin-top: 1rem; 
+                        width: 100%; 
+                        font-weight: 700; 
+                        font-size: 1.05rem; 
+                        transition: all 0.3s ease; 
+                        text-transform: uppercase; 
+                        letter-spacing: 1px; 
+                        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);">
+                  Thêm vào giỏ
+                </button>
             <button onclick="event.stopPropagation(); buyNow(${p.id}, '${escapeHtml(p.ten_san_pham)}', ${p.gia_ban}, '${p.anh}')" class="btn-buy-now">
               Mua ngay
             </button>
@@ -269,7 +309,21 @@ async function showMyOrders() {
       $('content').innerHTML = `
         <h2>Đơn hàng của bạn</h2>
         <p>Chưa có đơn hàng nào.</p>
-        <button onclick="showHome()" class="btn-secondary">Tiếp tục mua sắm</button>
+         <button onclick="showHome()" 
+                style="padding: 1.3rem 2rem; 
+                background: #e0e0e0; 
+                color: #333; 
+                border: none; 
+                border-radius: 15px; 
+                cursor: pointer; 
+                font-size: 1.1rem; 
+                font-weight: 800; 
+                text-transform: uppercase; 
+                letter-spacing: 1px; 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+                transition: all 0.3s ease;">
+          Tiếp tục mua sắm
+        </button>
       `;
       return;
     }
@@ -665,36 +719,44 @@ async function updateOrderCOD(orderId) {
 }
 // ========== ADMIN - THỐNG KÊ + BIỂU ĐỒ ==========
 async function showStats() {
-  // Verify admin (giữ nguyên)
-  
   try {
-    $('content').innerHTML = '<div class="loading">Đang tải thống kê...</div>';
+    $('content').innerHTML = '<div class="loading">Đang tải biểu đồ...</div>';
     hide($('search-bar'));
-    
-    const stats = await api('/admin/thong-ke', 'GET'); // Trả {totalOrders, data: []}
-    
-    if (!stats || stats.data.length === 0) {
-      $('content').innerHTML = `<h2>Thống kê bán hàng</h2><p>Chưa có dữ liệu.</p>`;
+
+    // 👉 Tạm thời bỏ qua phần gọi API thống kê
+    /*
+    const stats = await api('/admin/thong-ke', 'GET');
+    console.log('Stats API response:', stats);
+
+    if (!stats || !stats.data || !Array.isArray(stats.data) || stats.data.length === 0) {
+      $('content').innerHTML = `
+        <h2>Thống kê bán hàng</h2>
+        <p>Chưa có dữ liệu hoặc API lỗi.</p>
+      `;
       return;
     }
-    
+    */
+
+    // 👉 Hiển thị iframe Grafana trước
     $('content').innerHTML = `
       <h2>Thống kê bán hàng (30 ngày gần nhất)</h2>
-      <p><strong>Tổng số đơn hàng:</strong> ${stats.totalOrders || 0}</p>
-      <table class="stats-table">
-        <thead><tr><th>Ngày</th><th>Số lượng bán</th><th>Doanh thu</th></tr></thead>
-        <tbody>
-          ${stats.data.map(s => `<tr><td>${s.ngay_ban}</td><td>${s.so_luong_ban}</td><td>${formatPrice(s.doanh_thu)}</td></tr>`).join('')}
-        </tbody>
-      </table>
       <h3>Biểu đồ số lượng mặt hàng bán theo ngày (Grafana)</h3>
-      <iframe src="https://your-grafana-instance.com/d/sales-chart?orgId=1&from=now-30d&to=now" width="100%" height="400" frameborder="0"></iframe>
+      <div class="grafana-chart" style="display:flex; justify-content:center; margin-top:20px;">
+        <iframe
+          src="http://nguyennhukhiem.com/grafana/d-solo/add8kv7/thng-k-sn-phm-bn-c?orgId=1&from=1761930000000&to=1764521999999&timezone=browser&panelId=1&__feature.dashboardSceneSolo=true"
+          width="900"
+          height="400"
+          frameborder="0"
+          style="border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.2);"
+        ></iframe>
+      </div>
     `;
   } catch (err) {
-    console.error('Lỗi load thống kê:', err);
-    $('content').innerHTML = '<h2>Không thể tải thống kê</h2>';
+    console.error('Lỗi load biểu đồ:', err);
+    $('content').innerHTML = '<h2>Không thể tải biểu đồ</h2>';
   }
 }
+
 
 // ========== HELPER FUNCTIONS ==========
 function formatPrice(price) {
