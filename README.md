@@ -2,7 +2,7 @@
 **Giảng viên:** Đỗ Duy Cốp  
 **Lớp học phần:** 58KTP  
 **Sinh viên thực hiện:** Nguyễn Như Khiêm  
-**Chủ đề:** Lập trình ứng dụng web thương mại điện tử trên nền Linux (Docker + Hyper-V + Ubuntu)
+**Chủ đề:** Lập trình ứng dụng web thương mại điện tử ( Web Bán Hàng Đồ Điện Tử ) trên nền Linux (Docker + Hyper-V + Ubuntu)
 
 ---
 
@@ -13,7 +13,7 @@ Sử dụng **Docker Compose** để quản lý các container:
 - `phpmyadmin` – giao diện quản trị DB
 - `nodered` – backend xử lý request, trả JSON
 - `grafana` – hiển thị thống kê sản phẩm bán chạy
-- `influxdb` – lưu lịch sử thống kê (nếu cần)
+- `influxdb` – lưu lịch sử thống kê 
 - `nginx` – web server reverse proxy
 
 ---
@@ -36,12 +36,13 @@ Sử dụng **Docker Compose** để quản lý các container:
 │   ├── data/                      # Lưu database của MariaDB
 │
 ├── influxdb/
-│   ├── data/                      # Dữ liệu time-series cho Grafana
+│   └── data/                      # Dữ liệu time-series cho Grafana
 │
 ├── grafana/
-│   └── data/                      # Lưu config, dashboards, users...
-│
-├── phpmyadmin/                    # (tuỳ chọn, không cần data riêng)
+│   ├── data/                      # Dashboards, users...
+│   └── config/
+        └── grafana.ini            # Lưu config,
+├── phpmyadmin/                    
 │
 └── web/
     ├── index.html                 # Single Page Application chính
@@ -71,8 +72,12 @@ Sử dụng **Docker Compose** để quản lý các container:
 ---
 
 ## Bước 2️⃣: Cài đặt Ubuntu trong Hyper-V
-1. Mở Hyper-V Manager (tìm trong Start Menu).  
-2. Nhấp phải vào tên máy bạn > New > Virtual Machine.  
+### 1. Tải Ubuntu Server
+Download tại : https://ubuntu.com/download/server  
+<img width="1856" height="960" alt="image" src="https://github.com/user-attachments/assets/23896676-066e-469b-9ece-07793f3fe2d0" />  
+
+2. Mở Hyper-V Manager (tìm trong Start Menu).  
+3. Nhấp phải vào tên máy bạn > New > Virtual Machine.  
 + Name: Đặt tên như "Ubuntu-Web".
 + Generation: Chọn Generation 1 (tương thích tốt với ISO).
 + Memory: 4GB (hoặc hơn nếu máy mạnh).
@@ -82,18 +87,18 @@ Sử dụng **Docker Compose** để quản lý các container:
 
 <img width="883" height="666" alt="image" src="https://github.com/user-attachments/assets/0a06c257-f43d-451f-8ec2-4b85a6ca0757" />  
  
-3. Hoàn tất wizard, nhấp phải VM > Connect > Start.
+4. Hoàn tất wizard, nhấp phải VM > Connect > Start.
 <img width="813" height="609" alt="image" src="https://github.com/user-attachments/assets/bdad9dcc-2619-4448-b571-0b58dd652809" /> 
 
-4. Trong cửa sổ VM, cài Ubuntu:
+5. Trong cửa sổ VM, cài Ubuntu:
 + Chọn ngôn ngữ tiếng Anh, kết nối WiFi nếu cần.
 + Tạo user/password
 <img width="1283" height="595" alt="Screenshot 2025-11-01 002614" src="https://github.com/user-attachments/assets/6174e99b-88b0-45d0-b747-988850b080aa" />
 
-5. Sau khi cài xong ,đăng nhập Unbuntu
+6. Sau khi cài xong ,đăng nhập Unbuntu
 <img width="1032" height="626" alt="image" src="https://github.com/user-attachments/assets/73946c0d-237b-458d-bb3d-bb82368a5447" />
 
-6. Sau cài, cập nhật hệ thống: Mở Terminal (Ctrl+Alt+T), chạy:
+7. Sau cài, cập nhật hệ thống ,chạy:
 
 ```
 sudo apt update && sudo apt upgrade -y
@@ -235,7 +240,7 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
       - DOCKER_INFLUXDB_INIT_ORG=ecommerce
       - DOCKER_INFLUXDB_INIT_BUCKET=statistics
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=shMvV7JE1SoGIKww-Kv8DRf0K2P0-0OgGXIUjRaXkmPKL49lLL3-eYxwTIG93X2w61XeetNJC4j6YH7erZ6TtA==
     ports:
       - "8086:8086"
     volumes:
@@ -244,23 +249,24 @@ services:
       - ecommerce-network
 
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: always
-    environment:
-      - GF_SERVER_HTTP_PORT=3000
-      - GF_SERVER_ROOT_URL=http://nguyennhukhiem.com/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./grafana/data:/var/lib/grafana
-    depends_on:
-      - influxdb
-    networks:
-      - ecommerce-network
+      image: grafana/grafana:latest
+      container_name: grafana
+      restart: always
+      environment:
+        - GF_SERVER_HTTP_PORT=3000
+        - GF_SERVER_ROOT_URL=http://nguyennhukhiem.com/grafana
+        - GF_SERVER_SERVE_FROM_SUB_PATH=true
+        - GF_SECURITY_ADMIN_USER=admin
+        - GF_SECURITY_ADMIN_PASSWORD=admin123
+      ports:
+        - "3000:3000"
+      volumes:
+        - ./grafana/data:/var/lib/grafana
+        - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini
+      depends_on:
+        - influxdb
+      networks:
+        - ecommerce-network
 
   nginx:
     image: nginx:latest
@@ -293,6 +299,10 @@ docker compose up -d
 ---
 
 ## 🌍 5. CẤU HÌNH NGINX
+ - Cấu hình nginx để chạy được website qua url http://nguyennhukhiem.com
+ - Cấu hình nginx để http://nguyennhukhiem.com/nodered truy cập vào nodered qua cổng 80, (dù nodered đang chạy ở port 1880)
+ - Cấu hình nginx để http://nguyennhukhiem.com/grafana truy cập vào grafana qua cổng 80, (dù grafana đang chạy ở port 3000)
+
 ### File `nginx/default.conf`:
 
 ```nginx
@@ -354,29 +364,17 @@ server {
     }
 
     # === Grafana (Subpath) ===
-    location /grafana/ {
-        proxy_pass http://grafana:3000/;
+    location ^~ /grafana/ {
+        proxy_pass http://grafana:3000;
         proxy_http_version 1.1;
+        
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
-        
-        # Fix redirects từ Grafana
-        proxy_redirect http://grafana:3000/ /grafana/;
-        proxy_redirect / /grafana/;
-        
-        # CHỈ thay thế trong HTML (KHÔNG làm hỏng JS/CSS)
-        sub_filter_once off;
-        sub_filter_types text/html;
-        sub_filter 'href="/' 'href="/grafana/';
-        sub_filter 'src="/' 'src="/grafana/';
-        sub_filter 'href="public/' 'href="/grafana/public/';
-        sub_filter 'src="public/' 'src="/grafana/public/';
-        
-        proxy_set_header Accept-Encoding "";
     }
 
     # === Bảo mật Header ===
@@ -389,24 +387,50 @@ server {
     error_page 404 /index.html;
 }
 ```
+### Tạo file `grafana.ini`
+Tạo trong /web-ecommerce/grafana/config  
+<img width="1101" height="652" alt="image" src="https://github.com/user-attachments/assets/d736b0c8-b3f6-4c26-8ddf-a8d70b497f50" />
 
+### Cấu hình IP tĩnh cho Ubuntu 
+- Dùng lệnh `nano /etc/netplan/50-cloud-init.yaml`  . Đặt IP : 172.25.128.100
 
-<img width="1875" height="968" alt="image" src="https://github.com/user-attachments/assets/7efd6ca8-1439-4f57-866d-b372a290098c" />  
+<img width="1143" height="664" alt="image" src="https://github.com/user-attachments/assets/eac11474-3eae-488f-9bcd-234012f102eb" />
 
-<img width="1812" height="947" alt="image" src="https://github.com/user-attachments/assets/2925e2cb-3f04-4ad1-add2-62015b37e713" />  
+- Trên máy thật mở cấu hình cài ip cho cùng đường mạng  
+<img width="1076" height="717" alt="image" src="https://github.com/user-attachments/assets/55bac8c1-5ab8-48a2-8ee3-31f77babe810" />  
+
+- Cấu hình hostname mở file `C:\Windows\System32\drivers\etc\hosts`  
+<img width="482" height="99" alt="image" src="https://github.com/user-attachments/assets/7c21c19d-fa7e-402a-b6a4-034a9b7d02b1" />
+
+### PhpMyAdmin chạy tại http://172.25.128.100:8080/
+<img width="1878" height="1079" alt="image" src="https://github.com/user-attachments/assets/3884a9e6-5d08-4417-9d17-2b3b26c05ff2" />
+
+### InfluxDB chạy tại http://172.25.128.100:8086/
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2304b51c-48b9-46ef-812c-475933f5a370" />
+
+### Website chính: 👉 http://nguyennhukhiem.com  
+<img width="1883" height="1079" alt="image" src="https://github.com/user-attachments/assets/1d6a9039-4e03-4b93-ac95-d9961540cb21" />
+
+### Node-RED: 👉 http://nguyennhukhiem.com/nodered  
+Cấu hình file settings.js để nodered yêu cầu đăng nhập  
+
+<img width="1101" height="652" alt="Screenshot 2025-11-06 193802" src="https://github.com/user-attachments/assets/fd5a3fe4-500c-438d-8b55-24f9fcf5c14d" />  
+
+Sau đó chạy lại nodered  
+
+<img width="1919" height="1054" alt="image" src="https://github.com/user-attachments/assets/f9900ecc-45f1-44a1-be73-7e674c0e6e30" />  
+
+### Grafana: 👉 http://nguyennhukhiem.com/grafana  
+<img width="1917" height="1079" alt="Screenshot 2025-11-06 193248" src="https://github.com/user-attachments/assets/c853e5de-d27d-43be-83cd-821693efa9fd" />
 
 ---
-
-**Website chính:** 👉 http://nguyennhukhiem.com  
-**Node-RED:** 👉 http://nguyennhukhiem.com/nodered  
-**Grafana:** 👉 http://nguyennhukhiem.com/grafana  
 
 ## 💻 6. FRONTEND (index.html + script.js)
 ```
 web/
-    ├── index.html                 #  Cấu trúc giao diện chính (SPA)
+    ├── index.html                 #  Cấu trúc giao diện chính
     ├── js/
-    │   ├── app.js                 # Logic xử lý giao diện + gọi API nodered
+    │   ├── app.js                 # Logic xử lý giao diện
     │   ├── login.js               # Xử lý đăng nhập
     │   └── cart.js                # Giỏ hàng, đặt hàng
     ├── css/
@@ -416,14 +440,16 @@ web/
 ```
 ### Các chức năng:
 - Login (mã hóa mật khẩu bằng SHA-256)
-- Hiển thị danh sách sản phẩm bán chạy
-- Thêm sản phẩm vào giỏ hàng
-- Thanh toán, lưu đơn hàng vào MariaDB
+- Có tính năng liệt kê các sản phẩm bán chạy ra trang chủ
+- Có tính năng liệt kê các nhóm sản phẩm
+- Có tính năng liệt kê sản phẩm theo nhóm
+- Có tính năng tìm kiếm sản phẩm
+- Có tính năng chọn sản phẩm (đưa sản phẩm vào giỏ hàng, thay đổi số lượng sản phẩm trong giỏ, cập nhật tổng tiền)
+- Có tính năng đặt hàng, nhập thông tin giao hàng
 
 ### Trang Admin:
-- Xem danh sách đơn hàng
-- Thống kê doanh thu (iframe Grafana)
-
+- Thống kê xem có bao nhiêu đơn hàng, call để xác nhận và cập nhật thông tin đơn hàng. chuyển cho bộ phận đóng gói, gửi bưu điện, cập nhật mã COD, tình trạng giao hàng, huỷ hàng,...
+- Biểu đồ thống kê số lượng mặt hàng bán được trong từng ngày.
 ---
 
 ## ⚙️ 7. NODE-RED BACKEND
@@ -431,6 +457,7 @@ web/
 ### 1. Đăng Nhập : API `/login` – Xác thực người dùng   
 curl -X POST http://nguyennhukhiem.com/api/login \
 <img width="1484" height="268" alt="image" src="https://github.com/user-attachments/assets/9c201540-d722-48f3-b24a-ac80d8bbc2d5" />
+<img width="1599" height="739" alt="image" src="https://github.com/user-attachments/assets/3dea9350-a3a0-4f69-87ab-3c35da4f21c4" />
 
 ### 1. Sản phẩm bán chạy 
 curl http://nguyennhukhiem.com/api/san-pham-ban-chay
