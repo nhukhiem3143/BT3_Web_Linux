@@ -424,8 +424,158 @@ Sau đó chạy lại nodered
 <img width="1917" height="1079" alt="Screenshot 2025-11-06 193248" src="https://github.com/user-attachments/assets/c853e5de-d27d-43be-83cd-821693efa9fd" />
 
 ---
+## 6. MariaDB
+<img width="1851" height="781" alt="image" src="https://github.com/user-attachments/assets/f209bdea-e769-430c-adc3-1593d1c7250a" />  
 
-## 💻 6. FRONTEND (index.html + script.js)
+### 🛍️ Cơ sở dữ liệu: BanHang
+
+#### 🧩 Danh sách bảng và vai trò
+
+#### 1. 🧍‍♂️ `NguoiDung`
+- **Vai trò:** Lưu thông tin người dùng của hệ thống (bao gồm cả admin và khách hàng).  
+- **Các cột chính:**  
+  - `ten_dang_nhap`: Tên đăng nhập (duy nhất)  
+  - `mat_khau`: Mật khẩu đã mã hóa  
+  - `ho_ten`, `email`, `dien_thoai`  
+  - `la_admin`: Xác định người quản trị (1) hay khách hàng (0)  
+- **Quan hệ:**  
+  - Có thể có nhiều đơn hàng (`DonHang`)  
+  - Có thể đánh giá nhiều sản phẩm (`DanhGia`)
+
+---
+
+#### 2. 📦 `DonHang`
+- **Vai trò:** Lưu thông tin các đơn hàng của người dùng.  
+- **Các cột chính:**  
+  - `nguoi_dung_id`: Khách hàng đặt hàng  
+  - `tong_tien`: Tổng giá trị đơn hàng  
+  - `trang_thai`: Trạng thái đơn (chờ, đang giao, đã giao, huỷ, …)  
+  - `ten_nguoi_nhan`, `dia_chi_giao`, `dien_thoai_nguoi_nhan`  
+  - `ngay_tao`, `ngay_cap_nhat`  
+- **Quan hệ:**  
+  - Thuộc về `NguoiDung`  
+  - Có nhiều chi tiết đơn hàng (`ChiTietDonHang`)
+
+---
+
+#### 3. 🧾 `ChiTietDonHang`
+- **Vai trò:** Lưu **chi tiết từng sản phẩm trong đơn hàng** (liên kết nhiều–nhiều giữa `DonHang` và `SanPham`).  
+- **Các cột chính:**  
+  - `don_hang_id`: Đơn hàng chứa sản phẩm  
+  - `san_pham_id`: Sản phẩm trong đơn  
+  - `so_luong`: Số lượng mua  
+  - `gia_luc_mua`: Giá tại thời điểm đặt hàng  
+- **Quan hệ:**  
+  - Thuộc về `DonHang`  
+  - Thuộc về `SanPham`
+
+---
+
+#### 4. 📱 `SanPham`
+- **Vai trò:** Lưu thông tin chi tiết về sản phẩm.  
+- **Các cột chính:**  
+  - `ten_san_pham`, `nhom_id`, `gia_ban`, `gia_cu`, `ton_kho`, `mo_ta`, `anh`  
+  - `la_ban_chay`, `so_luot_mua`, `diem_trung_binh`  
+- **Quan hệ:**  
+  - Thuộc về `NhomSanPham`  
+  - Bị tham chiếu bởi `ChiTietDonHang`, `DanhGia`, `ThongKeBanHang`
+
+---
+
+#### 5. 🗂️ `NhomSanPham`
+- **Vai trò:** Quản lý **phân loại sản phẩm** (nhóm danh mục).  
+- **Các cột chính:**  
+  - `ten_nhom`, `mo_ta`, `anh`  
+- **Quan hệ:**  
+  - Một nhóm có nhiều sản phẩm (`SanPham`)
+
+---
+
+#### 6. ⭐ `DanhGia`
+- **Vai trò:** Lưu **đánh giá và xếp hạng sản phẩm** từ người dùng.  
+- **Các cột chính:**  
+  - `san_pham_id`, `nguoi_dung_id`  
+  - `so_sao`: Từ 1 đến 5  
+  - `noi_dung`, `ngay_danh_gia`  
+- **Quan hệ:**  
+  - Thuộc về `SanPham`  
+  - Thuộc về `NguoiDung`
+
+---
+
+#### 7. 📈 `ThongKeBanHang`
+- **Vai trò:** Lưu **số lượng sản phẩm bán ra theo ngày**, dùng để thống kê, báo cáo doanh thu.  
+- **Các cột chính:**  
+  - `san_pham_id`, `so_luong_ban`, `ngay_ban`  
+- **Quan hệ:**  
+  - Thuộc về `SanPham`
+
+---
+
+## ⚙️ 7. NODE-RED BACKEND
+### Các flow chính:
+### 1. Đăng Nhập : API `/login` – Xác thực người dùng   
+curl -X POST http://nguyennhukhiem.com/api/login  
+<img width="1599" height="739" alt="image" src="https://github.com/user-attachments/assets/3dea9350-a3a0-4f69-87ab-3c35da4f21c4" />
+
+### Test API
+<img width="697" height="672" alt="image" src="https://github.com/user-attachments/assets/48b9e611-9678-4f17-81e0-4eb0c6067be5" />
+
+### 2. Sản phẩm bán chạy 
+curl http://nguyennhukhiem.com/api/san-pham-ban-chay
+<img width="1020" height="148" alt="image" src="https://github.com/user-attachments/assets/11ddce68-5392-4aa6-9055-d4925b269386" />  
+
+### 3. Nhóm sản phẩm
+curl http://nguyennhukhiem.com/api/nhom-san-pham
+<img width="925" height="157" alt="image" src="https://github.com/user-attachments/assets/29828ee3-e84e-41fe-a731-3394c6f8eb1d" />   
+
+### Test API
+<img width="964" height="871" alt="image" src="https://github.com/user-attachments/assets/8a2a1c4f-b703-49f2-bb73-dcefb6a1eb70" />  
+
+### 4. Sản phẩm theo nhóm (nhóm ID = 1)
+curl http://nguyennhukhiem.com/api/san-pham?nhom=1
+<img width="965" height="177" alt="image" src="https://github.com/user-attachments/assets/4934be24-29f3-4e81-938e-ce2241408c72" />  
+
+### Test API
+<img width="1039" height="748" alt="image" src="https://github.com/user-attachments/assets/d18e4ed9-123e-402b-ac43-4de6bfce9214" />    
+
+### 5. Tìm kiếm
+curl http://nguyennhukhiem.com/api/tim-kiem?q=iphone
+<img width="916" height="148" alt="image" src="https://github.com/user-attachments/assets/fc03dd67-a52b-4ca3-8f70-86f35ff65fb9" />  
+
+### Test API
+<img width="1046" height="795" alt="image" src="https://github.com/user-attachments/assets/ba3c4281-8d13-444f-be71-946e1468f9ec" />  
+
+### 6. Đặt hàng 
+curl -X POST http://nguyennhukhiem.com/api/dat-hang \
+<img width="1693" height="324" alt="image" src="https://github.com/user-attachments/assets/c50a3e6d-89b5-4559-91dc-42e6cf0c6c34" />   
+
+### Test API
+<img width="700" height="790" alt="image" src="https://github.com/user-attachments/assets/9a9f6e10-77d7-45d8-ba32-c7da80593bfd" />
+
+### 7. Xem đơn hàng
+curl -X GET http://nguyennhukhiem.com/api/don-hang/2
+<img width="1462" height="287" alt="image" src="https://github.com/user-attachments/assets/6b672492-a72a-44d5-9443-c42a87ab80c3" />
+
+### Test API
+<img width="1156" height="964" alt="image" src="https://github.com/user-attachments/assets/273d58c8-aeb0-4e90-a0dc-d4ed00049d20" />
+
+### 7. Đánh giá sản phẩm
+curl -X POST http://nguyennhukhiem.com/api//danh-gia-don/:orderId \
+<img width="1808" height="582" alt="image" src="https://github.com/user-attachments/assets/0b7f4fbf-d6bf-4fde-939b-20a41f39a30f" />
+
+### Test API
+<img width="693" height="626" alt="image" src="https://github.com/user-attachments/assets/e83a3784-87fb-4c3a-a17d-07d916316c68" />
+
+### 8. Admin - Xem đơn hàng - Cập nhật đơn hàng - Thống kê
+<img width="1584" height="683" alt="image" src="https://github.com/user-attachments/assets/517e6853-8fee-483c-aa02-29f8dfaaf75a" />
+
+### 9. Lưu doanh thu vào influxdb
+<img width="1725" height="687" alt="image" src="https://github.com/user-attachments/assets/f7f50a81-646a-49e9-a91e-0ef3970b66ec" />
+
+---
+
+## 💻 8. FRONTEND (index.html + script.js)
 ```
 web/
     ├── index.html                 #  Cấu trúc giao diện chính
@@ -440,6 +590,11 @@ web/
 ```
 ### Các chức năng:
 - Login (mã hóa mật khẩu bằng SHA-256)
+<img width="1882" height="1025" alt="image" src="https://github.com/user-attachments/assets/6fb7b41c-c7bd-4ef7-a37d-a205db44c82e" />
+
+- Lưu mật khẩu trong db dạng mã hoá
+<img width="1700" height="733" alt="image" src="https://github.com/user-attachments/assets/6bab212d-c6b1-41eb-86d8-41d4746abe5a" />  
+
 - Có tính năng liệt kê các sản phẩm bán chạy ra trang chủ
 - Có tính năng liệt kê các nhóm sản phẩm
 - Có tính năng liệt kê sản phẩm theo nhóm
@@ -451,41 +606,6 @@ web/
 - Thống kê xem có bao nhiêu đơn hàng, call để xác nhận và cập nhật thông tin đơn hàng. chuyển cho bộ phận đóng gói, gửi bưu điện, cập nhật mã COD, tình trạng giao hàng, huỷ hàng,...
 - Biểu đồ thống kê số lượng mặt hàng bán được trong từng ngày.
 ---
-
-## ⚙️ 7. NODE-RED BACKEND
-### Các flow chính:
-### 1. Đăng Nhập : API `/login` – Xác thực người dùng   
-curl -X POST http://nguyennhukhiem.com/api/login \
-<img width="1484" height="268" alt="image" src="https://github.com/user-attachments/assets/9c201540-d722-48f3-b24a-ac80d8bbc2d5" />
-<img width="1599" height="739" alt="image" src="https://github.com/user-attachments/assets/3dea9350-a3a0-4f69-87ab-3c35da4f21c4" />
-
-### 1. Sản phẩm bán chạy 
-curl http://nguyennhukhiem.com/api/san-pham-ban-chay
-<img width="1020" height="148" alt="image" src="https://github.com/user-attachments/assets/11ddce68-5392-4aa6-9055-d4925b269386" />
-
-### 2. Nhóm sản phẩm
-curl http://nguyennhukhiem.com/api/nhom-san-pham
-<img width="925" height="157" alt="image" src="https://github.com/user-attachments/assets/29828ee3-e84e-41fe-a731-3394c6f8eb1d" />
-
-### 3. Sản phẩm theo nhóm (nhóm ID = 1)
-curl http://nguyennhukhiem.com/api/san-pham?nhom=1
-<img width="965" height="177" alt="image" src="https://github.com/user-attachments/assets/4934be24-29f3-4e81-938e-ce2241408c72" />
-
-### 4. Tìm kiếm
-curl http://nguyennhukhiem.com/api/tim-kiem?q=iphone
-<img width="916" height="148" alt="image" src="https://github.com/user-attachments/assets/fc03dd67-a52b-4ca3-8f70-86f35ff65fb9" />
-
-### 6. Đặt hàng (cần token)
-curl -X POST http://nguyennhukhiem.com/api/dat-hang \
-<img width="1693" height="324" alt="image" src="https://github.com/user-attachments/assets/c50a3e6d-89b5-4559-91dc-42e6cf0c6c34" />
-
-### 7. Xem đơn hàng
-curl -X GET http://nguyennhukhiem.com/api/don-hang/2
-<img width="1462" height="287" alt="image" src="https://github.com/user-attachments/assets/6b672492-a72a-44d5-9443-c42a87ab80c3" />
-
-
----
-
 ## 🚀 8. KHỞI CHẠY HỆ THỐNG
 Trong thư mục dự án:
 
@@ -499,15 +619,6 @@ sudo docker compose up -d
 - **Node-RED**: http://nguyennhukhiem.com/nodered
 - **Grafana**: http://nguyennhukhiem.com/grafana
 
----
-
-## 📸 9. HÌNH ẢNH MINH HỌA
-
-- `docker ps` hiển thị container đang chạy
-- Giao diện web sản phẩm
-- Biểu đồ Grafana thống kê đơn hàng
-
----
 
 ## 📚 10. KẾT LUẬN
 Qua bài này, em đã:
