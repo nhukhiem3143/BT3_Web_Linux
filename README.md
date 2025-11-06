@@ -574,6 +574,14 @@ curl -X POST http://nguyennhukhiem.com/api//danh-gia-don/:orderId \
 <img width="1725" height="687" alt="image" src="https://github.com/user-attachments/assets/f7f50a81-646a-49e9-a91e-0ef3970b66ec" />
 
 ---
+### Cấu hình influxDB
+- Lấy API token,bucket,Organization cập nhật trong Nodered
+<img width="799" height="404" alt="image" src="https://github.com/user-attachments/assets/f543a7ae-c8c3-4758-83d5-28ab78ac9bbe" />  
+<img width="1690" height="571" alt="image" src="https://github.com/user-attachments/assets/531df5c2-997e-4344-839e-ec8e3b60abc2" />  
+
+<img width="1919" height="1019" alt="image" src="https://github.com/user-attachments/assets/3d181481-af00-4889-b37d-bf9b037880fc" />  
+
+<img width="1908" height="1027" alt="image" src="https://github.com/user-attachments/assets/6f496e55-c287-48ad-82c0-f72cc0cb6012" />  
 
 ## 💻 8. FRONTEND (index.html + script.js)
 ```
@@ -589,22 +597,60 @@ web/
         └── images/                # Lưu ảnh sản phẩm
 ```
 ### Các chức năng:
-- Login (mã hóa mật khẩu bằng SHA-256)
+#### Login (mã hóa mật khẩu bằng SHA-256)
 <img width="1882" height="1025" alt="image" src="https://github.com/user-attachments/assets/6fb7b41c-c7bd-4ef7-a37d-a205db44c82e" />
 
-- Lưu mật khẩu trong db dạng mã hoá
+#### Lưu mật khẩu trong db dạng mã hoá
 <img width="1700" height="733" alt="image" src="https://github.com/user-attachments/assets/6bab212d-c6b1-41eb-86d8-41d4746abe5a" />  
 
-- Có tính năng liệt kê các sản phẩm bán chạy ra trang chủ
-- Có tính năng liệt kê các nhóm sản phẩm
-- Có tính năng liệt kê sản phẩm theo nhóm
-- Có tính năng tìm kiếm sản phẩm
-- Có tính năng chọn sản phẩm (đưa sản phẩm vào giỏ hàng, thay đổi số lượng sản phẩm trong giỏ, cập nhật tổng tiền)
-- Có tính năng đặt hàng, nhập thông tin giao hàng
+#### Có tính năng liệt kê các sản phẩm bán chạy ra trang chủ  
+<img width="1879" height="1029" alt="image" src="https://github.com/user-attachments/assets/517f4a92-bd17-4919-a2b0-346056fe59b8" />
+
+#### Có tính năng liệt kê các nhóm sản phẩm
+<img width="1913" height="1032" alt="image" src="https://github.com/user-attachments/assets/8d0dc541-9c55-4d2a-b994-2ff14de5bca7" />
+
+#### Có tính năng liệt kê sản phẩm theo nhóm
+<img width="1919" height="1023" alt="image" src="https://github.com/user-attachments/assets/9fec85ea-75a7-4f08-9617-b6feab663c05" />
+
+#### Có tính năng tìm kiếm sản phẩm
+<img width="1919" height="1030" alt="image" src="https://github.com/user-attachments/assets/1a2223f8-f6a6-44a6-8cd9-e6692a830e38" />
+
+#### Có tính năng chọn sản phẩm (đưa sản phẩm vào giỏ hàng, thay đổi số lượng sản phẩm trong giỏ, cập nhật tổng tiền)
+**Thêm giỏ hàng** 
+<img width="1891" height="1026" alt="image" src="https://github.com/user-attachments/assets/8caadc68-2014-4ba9-880e-ffe70de4636b" />
+
+**Thay đổi số lượng sản phẩm và cập nhật tổng tiền**
+<img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/d0d85467-a7c2-4efd-a891-c646331be13d" />
+
+#### Có tính năng đặt hàng, nhập thông tin giao hàng
+<img width="1884" height="1018" alt="image" src="https://github.com/user-attachments/assets/da139766-218e-49b7-a559-3df353f00120" />
 
 ### Trang Admin:
-- Thống kê xem có bao nhiêu đơn hàng, call để xác nhận và cập nhật thông tin đơn hàng. chuyển cho bộ phận đóng gói, gửi bưu điện, cập nhật mã COD, tình trạng giao hàng, huỷ hàng,...
-- Biểu đồ thống kê số lượng mặt hàng bán được trong từng ngày.
+#### Thống kê xem có bao nhiêu đơn hàng, call để xác nhận và cập nhật thông tin đơn hàng. chuyển cho bộ phận đóng gói, gửi bưu điện, cập nhật mã COD, tình trạng giao hàng, huỷ hàng,...
+<img width="1918" height="1019" alt="image" src="https://github.com/user-attachments/assets/4d696d61-4e47-422a-8aae-36a24c91fe18" />
+
+#### Call để xác nhận và cập nhật thông tin đơn hàng
+<img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/f99b6ba7-580c-4c71-a28a-4cdff9cec9cb" />  
+<img width="1896" height="1028" alt="image" src="https://github.com/user-attachments/assets/5fb7f0d1-d581-4e5a-86dc-ad51addaa6a5" />
+
+#### Chuyển cho bộ phận đóng gói
+<img width="1916" height="1029" alt="image" src="https://github.com/user-attachments/assets/3455d377-f1c4-44e6-827b-1f16d6250d2a" />
+
+#### Gửi bưu điện
+<img width="1916" height="1037" alt="image" src="https://github.com/user-attachments/assets/8ac4d536-b83b-4bdf-ab23-713ba67de06d" />
+
+#### Cập nhật mã COD
+<img width="1918" height="1041" alt="image" src="https://github.com/user-attachments/assets/c52b1bc4-4c7c-4281-906b-d4e5432841a9" />
+
+#### Tình trạng giao hàng
+<img width="1913" height="921" alt="image" src="https://github.com/user-attachments/assets/0425ac64-f516-47a3-b5b3-5613b5151d27" />
+
+#### Huỷ hàng
+<img width="1919" height="854" alt="image" src="https://github.com/user-attachments/assets/63cc6aea-c815-4c12-938a-0c11ca75117e" />
+
+#### Biểu đồ thống kê số lượng mặt hàng bán được trong từng ngày.
+<img width="1919" height="1032" alt="image" src="https://github.com/user-attachments/assets/447e8ed3-38e2-49dc-9a40-ad62c941aabb" />
+
 ---
 ## 🚀 8. KHỞI CHẠY HỆ THỐNG
 Trong thư mục dự án:
